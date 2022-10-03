@@ -1,4 +1,4 @@
-package maxrects
+package pack
 
 import (
 	"encoding/json"
@@ -10,12 +10,14 @@ import (
 	"image"
 	"image/draw"
 	"image/png"
+
+	"github.com/telinc1/maxrects-pack/maxrects"
 )
 
 type FrameData struct {
 	Name string
 	Img  image.Image
-	Rect Rect
+	Rect maxrects.Rect
 }
 
 type OutputMode int8
@@ -67,7 +69,7 @@ func FrameDataFromPNG(name string, reader io.Reader) (*FrameData, error) {
 	return &FrameData{
 		name,
 		img,
-		Rect{img.Bounds().Dx(), img.Bounds().Dy(), 0, 0},
+		maxrects.Rect{Width: img.Bounds().Dx(), Height: img.Bounds().Dy(), X: 0, Y: 0},
 	}, nil
 }
 
@@ -99,8 +101,8 @@ func DrawExtruded(dst draw.Image, dp image.Point, size image.Point, src image.Im
 	}
 }
 
-func (packer *SingleBinPacker) NewBin() *Bin {
-	bin := NewBin(packer.MaxWidth, packer.MaxHeight, 2*packer.Extrude, packer.Extrude, true)
+func (packer *SingleBinPacker) NewBin() *maxrects.Bin {
+	bin := maxrects.NewBin(packer.MaxWidth, packer.MaxHeight, 2*packer.Extrude, packer.Extrude, true)
 	bin.POT = packer.POT
 	bin.Square = packer.Square
 
@@ -134,7 +136,7 @@ func (packer *SingleBinPacker) Pack(
 	var errs errorGroup
 
 	frames := make([]*FrameData, len(frameSrcs))
-	rects := make([]*Rect, len(frameSrcs))
+	rects := make([]*maxrects.Rect, len(frameSrcs))
 
 	for i, frameName := range frameNames {
 		reader := frameSrcs[i]

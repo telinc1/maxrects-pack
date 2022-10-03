@@ -1,4 +1,4 @@
-package maxrects
+package pack
 
 import (
 	"errors"

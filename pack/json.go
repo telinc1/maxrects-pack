@@ -1,4 +1,4 @@
-package maxrects
+package pack
 
 type RectJSON struct {
 	X      int `json:"x"`
